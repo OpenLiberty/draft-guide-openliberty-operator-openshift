@@ -1,6 +1,6 @@
 // tag::copyright[]
 /*******************************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2020, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ package io.openliberty.guides.models;
 
 import java.util.Objects;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
@@ -26,7 +26,7 @@ public class SystemLoad {
 
     public String hostId;
     public Double loadAverage;
-        
+
     public SystemLoad(String hostId, Double cpuLoadAvg) {
         this.hostId = hostId;
         this.loadAverage = cpuLoadAvg;
@@ -48,7 +48,7 @@ public class SystemLoad {
     public int hashCode() {
         return Objects.hash(hostId, loadAverage);
     }
-    
+
     @Override
     public String toString() {
         return "CpuLoadAverage: " + jsonb.toJson(this);
