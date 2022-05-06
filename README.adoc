@@ -37,14 +37,14 @@ https://kubernetes.io/docs/concepts/extend-kubernetes/operator/#operators-in-kub
 
 The application in this guide consists of one microservice, `system`. The system microservice returns the JVM system properties of its host.
 
-You will deploy the `system` microservice by using the Open Liberty Operator. The https://github.com/OpenLiberty/open-liberty-operator[Open Liberty Operator^] provides a method of packaging, deploying, and managing Open Liberty applications on Kubernetes-based clusters. The Open Liberty Operator watches Open Liberty resources and creates various Kubernetes resources, including `Deployments`, `Services`, and `Routes`, depending on the configurations. The Operator then continuously compares the current state of the resources, the desired state of application deployment, and reconciles them when necessary.
+You will deploy the `system` microservice by using the Open Liberty Operator. The https://github.com/OpenLiberty/open-liberty-operator[Open Liberty Operator^] provides a method of packaging, deploying, and managing Open Liberty applications on Kubernetes-based clusters. The Open Liberty Operator watches Open Liberty resources and creates various Kubernetes resources, including `Deployments`, `Services`, and `Routes`, depending on the configurations. The Operator then continuously compares the current state of the resources with the desired state of application deployment and reconciles them when necessary.
 
 
 // Static guide instruction
 ifndef::cloud-hosted[]
 == Additional prerequisites
 
-Before you can deploy your microservice, you must gain access to a cluster on OpenShift and have an OpenShift client installed. For client installation instructions, refer to https://docs.openshift.com/container-platform/4.5/cli_reference/openshift_cli/getting-started-cli.html[the official OpenShift Online documentation^].
+Before you can deploy your microservice, you must gain access to a cluster on OpenShift and have an OpenShift client installed. For client installation instructions, refer to https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html[the official OpenShift Online documentation^].
 
 There are various OpenShift offerings. You can gain access to an OpenShift cluster that is hosted on https://www.openshift.com/products/openshift-ibm-cloud[IBM Cloud^], or check out other offerings https://www.openshift.com/products[from OpenShift^]. 
 
@@ -101,7 +101,7 @@ include::{common-includes}/gitclone.adoc[]
 
 // Static guide instruction
 ifndef::cloud-hosted[]
-When you obtained your OpenShift cluster, you received login information for the https://docs.openshift.com/container-platform/4.5/web_console/web-console.html[OpenShift web console^]. The web console provides an interface to interact with your OpenShift cluster through your web browser.
+When you obtained your OpenShift cluster, you received login information for the https://docs.openshift.com/container-platform/latest/web_console/web-console.html[OpenShift web console^]. The web console provides an interface to interact with your OpenShift cluster through your web browser.
 
 To install the Operator, navigate to the web console and select *Operators > OperatorHub* from the sidebar menu. Search for and install the *Open Liberty Operator*.
 
@@ -142,13 +142,13 @@ The `openlibertyapplications` CRD defines a set of configurations for deploying 
 
 // Static guide instruction
 ifndef::cloud-hosted[]
-You can also confirm the installation of the operator from the web console. Navigate to the OperatorHub. From the categories on the left, you can filter to see only installed operators. 
+You can also confirm the installation of the operator from the web console. Navigate to the OperatorHub. You can filter the list of categories to see only installed operators. 
 
 == Adding a private Docker credential
 
 Docker limits container image pull requests for free DockerHub subscriptions. For more information, see link:https://www.docker.com/increase-rate-limits[Understanding Docker Hub Rate Limiting]. If you have a Docker account with a Pro or Team subscription, you can add a private credential to avoid any errors as a result of the limits.
 
-To add a private credential, navigate to the OpenShift web console and select *Workloads > Secrets* from the sidebar menu. Ensure that the selected project is `openshift-config`. Search for `pull-secret` and click the *three vertical dots* menu; then *Edit Secret*. Scroll down and click *Add credentials*. Enter `docker.io` to the *Registry Server Address* field, your Docker user ID to the *Username* field, and your Docker password to the *Password* field. Click the *Save* button to save the credential. 
+To add a private credential, navigate to the OpenShift web console and select *Workloads > Secrets* from the sidebar menu. Ensure that the selected project is `openshift-config`. Search for `pull-secret` and click the *three vertical dots* menu. Then select *Edit Secret* > *Add credentials*. Enter `docker.io` to the *Registry Server Address* field, your Docker user ID to the *Username* field, and your Docker password to the *Password* field. Click the *Save* button to save the credential. 
 endif::[]
 
 == Deploying the system microservice to OpenShift
@@ -192,7 +192,7 @@ build.yaml
 include::finish/build.yaml[]
 ----
 
-The [hotspot file=0]`build.yaml` template includes two objects. The [hotspot=imageStream file=0]`ImageStream` object provides an abstraction from the image in the image registry. This allows you to reference and tag the image. The image registry used is the integrated internal OpenShift Container Registry.
+The [hotspot file=0]`build.yaml` template includes two objects. The [hotspot=imageStream file=0]`ImageStream` object provides an abstraction from the image in the image registry, which allows you to reference and tag the image. The image registry is the integrated internal OpenShift Container Registry.
 
 The [hotspot=buildConfig file=0]`BuildConfig` object defines a single build definition and any triggers that kickstart the build. The [hotspot=source file=0]`source` spec defines the build input. In this case, the build inputs are your [hotspot=binary file=0]`binary` (local) files, which are streamed to OpenShift for the build. The uploaded files need to include the packaged `WAR` application binaries, which is why you needed to run the Maven commands. The template specifies a [hotspot=docker file=0]`Docker` strategy build, which invokes the `docker build` command, and creates a runnable container image of the microservice from the build input.
 
@@ -243,7 +243,7 @@ NAME                    TYPE     FROM             STATUS     STARTED
 system-buildconfig-1    Docker   Binary@f24cb58   Running    45 seconds ago
 ```
 
-You may need to wait some time until the build is complete. To check whether the build is complete, run the following command to view the build log until the `Push successful` message appears:
+You might need to wait some time until the build is complete. To check whether the build is complete, run the following command to view the build log until the `Push successful` message appears:
 
 [role='command']
 ```
@@ -305,7 +305,7 @@ The [hotspot file=0]`deploy.yaml` file is configured to deploy one [hotspot=olap
 
 The [hotspot=sysImage file=0]`applicationImage` parameter defines what container image is deployed as part of the `OpenLibertyApplication` CRD. This parameter follows the `<project-name>/<image-stream-name>[:tag]` format. The parameter can also point to an image hosted on an external registry, such as Docker Hub. The [hotspot=system file=0]`system` microservice is configured to use the [hotspot=sysImage file=0]`image` created from the earlier build. 
 
-One of the benefits of using `ImageStream` objects is that the operator redeploys the application when it detects a new image is pushed. The [hotspot=systemEnv file=0]`env` parameter is used to specify environment variables that are passed to the container at runtime.
+One of the benefits of using `ImageStream` objects is that the operator redeploys the application when it detects that a new image is pushed. The [hotspot=systemEnv file=0]`env` parameter is used to specify environment variables that are passed to the container at runtime.
 
 Additionally, the microservice includes the [hotspot=service file=0]`service` and [hotspot=expose file=0]`expose` parameters. The [hotspot=servicePort file=0]`service.port` parameter specifies which port is exposed by the container, allowing the microservice to be accessed from outside the container. To access the microservice from outside of the cluster, it must be exposed by setting the [hotspot=expose file=0]`expose` parameter to `true`. After you expose the microservice, the Operator automatically creates and configures routes for external access to your microservice.
 
@@ -406,11 +406,11 @@ When you’re done trying out the microservice, run following command to stop th
 oc delete -f deploy.yaml
 ```
 
-== Specifying other parameters
+== Specifying optional parameters
 
-You can visit the https://github.com/OpenLiberty/open-liberty-operator/blob/main/doc/user-guide-v1beta2.adoc#configuration[Open Liberty Operator user guide^] to find all of the supported optional parameters.
+You can also use the Open Liberty Operator to implement optional parameters in your application deployment by specifying the associated CRDs in your `deploy.yaml` file. For example, you can configure the https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/[Kubernetes liveness, readiness and startup probes^]. Visit the https://github.com/OpenLiberty/open-liberty-operator/blob/main/doc/user-guide-v1beta2.adoc#configuration[Open Liberty Operator user guide^] to find all of the supported optional CRDs.
 
-You can now configure the startup, readiness, and liveness probes. The [hotspot=startupProbe file=0]`startup probe` is used to verify whether deployed application is fully initialized before the liveness probe takes over, the [hotspot=livenessProbe file=0]`liveness probe` is used to determine whether the application is running, and the [hotspot=readinessProbe file=0]`readiness probe` is used to know whether the application is ready to process requests.
+To configure the Kubernetes liveness, readiness and startup probes by using the Open Liberty Operator, specify the `probes` in your `deploy.yaml` file. The [hotspot=startupProbe file=0]`startup` probe verifies whether deployed application is fully initialized before the liveness probe takes over. Then, the [hotspot=livenessProbe file=0]`liveness` probe determines whether the application is running and the [hotspot=readinessProbe file=0]`readiness` probe determines whether the application is ready to process requests. For more information about application health checks, see the https://openliberty.io/guides/kubernetes-microprofile-health.html[Checking the health of microservices on Kubernetes^] guide.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -424,7 +424,7 @@ deploy.yaml
 include::finish/deploy.yaml[]
 ----
 
-The health check endpoints `/health/started`, `/health/live` and `/health/ready` have already been created for you. 
+The `/health/started`, `/health/live`, and `/health/ready` health check endpoints are already created for you. 
 
 // Static guide instruction
 ifndef::cloud-hosted[]
@@ -481,7 +481,7 @@ endif::[]
 
 == Great work! You're done!
 
-You just deployed a microservice running in Open Liberty to OpenShift 4 by using the Open Liberty Operator.
+You just deployed a microservice running in Open Liberty to OpenShift 4 and configured the Kubernetes liveness, readiness and startup probes by using the Open Liberty Operator.
 
 == Related Links
 
