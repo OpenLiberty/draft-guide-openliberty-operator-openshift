@@ -18,7 +18,7 @@ oc describe imagestream/system-imagestream
 
 while :
 do
-    if [ "$(oc logs build/system-buildconfig-1 | grep successful)" ];
+    if [ "$(oc logs build/system-buildconfig-1 | grep "Push successful")" = "Push successful" ];
     then
         echo Build Complete
         break
@@ -26,19 +26,22 @@ do
     sleep 15
 done
 
-sleep 60
+sleep 45
+
+oc get imagestreams
+oc describe imagestream/system-imagestream
 
 sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 
+sleep 45
+
 oc get OpenLibertyApplications
 oc describe olapps/system
 
-sleep 15
-
 oc get pods
 
-curl -I http://"$(oc get routes system -o jsonpath='{.spec.host}')/system/properties" | grep "200 OK" || exit 1
+curl -I http://"$(oc get routes system -o jsonpath='{.spec.host}')/system/properties" | grep "200 OK"
 
 oc delete -f deploy.yaml
 oc delete imagestream.image.openshift.io/system-imagestream
