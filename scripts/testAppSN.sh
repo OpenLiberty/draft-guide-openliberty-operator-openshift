@@ -18,7 +18,7 @@ oc describe imagestream/system-imagestream
 
 while :
 do
-    if [ "`oc logs build/system-buildconfig-1 | grep successful`" ];
+    if [ "${oc logs build/system-buildconfig-1 | grep successful}" ];
     then
         echo Build Complete
         break
@@ -38,7 +38,7 @@ sleep 15
 
 oc get pods
 
-curl -I http://`oc get routes system -o jsonpath='{.spec.host}'`/system/properties | grep "200 OK" || exit 1
+curl -I http://${oc get routes system -o jsonpath='{.spec.host}'}/system/properties | grep "200 OK" || exit 1
 
 oc delete -f deploy.yaml
 oc delete imagestream.image.openshift.io/system-imagestream
