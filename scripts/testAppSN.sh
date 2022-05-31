@@ -37,7 +37,7 @@ do
         break
     fi
     
-    time_out=$(($time_out + 1))
+    time_out=$((time_out + 1))
     sleep 5
 
     if [ "$time_out" = "24" ]; 
