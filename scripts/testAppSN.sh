@@ -20,7 +20,7 @@ do
         echo Build Complete
         break
     fi
-    
+
     sleep 15
 done
 
@@ -37,10 +37,10 @@ do
         break
     fi
     
-    time_out=$(expr $time_out + 1)
+    time_out=$(($time_out + 1))
     sleep 5
 
-    if [ $time_out = 24 ]; 
+    if [ "$time_out" = "24" ]; 
     then
         echo Unable to reach /health endpoint
         echo Try rerunning the this test script
