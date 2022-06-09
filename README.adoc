@@ -435,6 +435,13 @@ Run the following command to deploy the `system` microservice with the new confi
 oc apply -f deploy.yaml
 ```
 
+Run the following command to check status of the pods:
+
+ [role='command']
+ ```
+ oc describe pods
+ ```
+
 You can revisit the microservice at `http://[HOST]/system/properties` as the previous section.
 endif::[]
 
@@ -445,6 +452,11 @@ Run the following commands to update the **applicationImage** with the **pullSec
 sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 ```
+Run the following command to check status of the pods:
+
+ ```bash
+ oc describe pods | grep health
+ ```
 
 Run the following command to get the URL:
 ```bash
