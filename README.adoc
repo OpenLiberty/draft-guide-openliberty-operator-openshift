@@ -437,10 +437,10 @@ oc apply -f deploy.yaml
 
 Run the following command to check status of the pods:
 
- [role='command']
- ```
- oc describe pods
- ```
+[role='command']
+```
+oc describe pods
+```
 
 You can revisit the microservice at `http://[HOST]/system/properties` as the previous section.
 endif::[]
@@ -453,9 +453,9 @@ sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-ima
 oc apply -f deploy.yaml
 ```
 Run the following command to check status of the pods:
- ```bash
- oc describe pods | grep health
- ```
+```bash
+oc describe pods | grep health
+```
 
 Run the following command to get the URL:
 ```bash
