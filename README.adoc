@@ -442,13 +442,13 @@ Run the following command to check status of the pods:
 oc describe pods
 ```
 
-Look for an output similar to the following example:
+Look for the following output to confirm that the health checks are successfully applied and working:
 
 [role='no_copy']
 ```
-Liveness:       http-get http://:9080/health/live delay=30s timeout=10s period=2s #success=1 #failure=12
-Readiness:      http-get http://:9080/health/ready delay=30s timeout=10s period=2s #success=1 #failure=12
-Startup:        http-get http://:9080/health/started delay=30s timeout=10s period=2s #success=1 #failure=12
+Liveness:   http-get http://:9080/health/live delay=30s timeout=10s period=2s #success=1 #failure=12
+Readiness:  http-get http://:9080/health/ready delay=30s timeout=10s period=2s #success=1 #failure=12
+Startup:    http-get http://:9080/health/started delay=30s timeout=10s period=2s #success=1 #failure=12
 ```
 
 You can revisit the microservice at `http://[HOST]/system/properties` as the previous section.
@@ -466,12 +466,12 @@ Run the following command to check status of the pods:
 oc describe pods | grep health
 ```
 
-Look for an output similar to the following example:
+Look for the following output to confirm that the health checks are successfully applied and working:
 
 ```
-Liveness:       http-get http://:9080/health/live delay=30s timeout=10s period=2s #success=1 #failure=12
-Readiness:      http-get http://:9080/health/ready delay=30s timeout=10s period=2s #success=1 #failure=12
-Startup:        http-get http://:9080/health/started delay=30s timeout=10s period=2s #success=1 #failure=12
+Liveness:   http-get http://:9080/health/live delay=30s timeout=10s period=2s #success=1 #failure=12
+Readiness:  http-get http://:9080/health/ready delay=30s timeout=10s period=2s #success=1 #failure=12
+Startup:    http-get http://:9080/health/started delay=30s timeout=10s period=2s #success=1 #failure=12
 ```
 
 Run the following command to get the URL:
