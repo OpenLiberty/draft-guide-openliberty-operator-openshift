@@ -10,22 +10,22 @@
 :page-layout: guide-multipane
 :page-duration: 30 minutes
 :page-releasedate: 2022-04-05
-:page-description: Explore how to deploy a microservice to Red Hat OpenShift 4 by using the Open Liberty Operator.
+:page-description: Explore how to deploy a microservice to Red Hat OpenShift 4 using the Open Liberty Operator.
 :page-tags: ['Kubernetes', 'Docker', 'Cloud'] 
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['cloud-openshift', 'cloud-openshift-operator', 'okd']
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/prod
 :imagesdir: /img/guide/{projectid}
 :source-highlighter: prettify
-:page-seo-title: Deploying a microservice to Red Hat OpenShift 4 by using Open Liberty Operator
+:page-seo-title: Deploying a microservice to Red Hat OpenShift 4 using Open Liberty Operator
 :page-seo-description: A getting started tutorial with examples on how to deploy a cloud-native Java application and a microservice to Red Hat OpenShift 4 cluster by using a Kubernetes Operator like the Open Liberty Operator.
 :guide-author: Open Liberty
-= Deploying a microservice to OpenShift 4 by using Open Liberty Operator
+= Deploying a microservice to OpenShift 4 using Open Liberty Operator
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website^].
 
-Explore how to deploy a microservice to Red Hat OpenShift 4 by using Open Liberty Operator.
+Explore how to deploy a microservice to Red Hat OpenShift 4 using Open Liberty Operator.
 
 == What you'll learn
 
