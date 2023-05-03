@@ -13,6 +13,8 @@ mvn -ntp -Dhttp.keepAlive=false \
 mvn -ntp liberty:start
 if curl "http://localhost:9080/health" | grep "UP" ; then exit $?; fi
 if curl "http://localhost:9080/system/properties" | grep "os.name" ; then exit $?; fi
+if curl -k "https://localhost:9443/health" | grep "UP" ; then exit $?; fi
+if curl -k "https://localhost:9443/system/properties" | grep "os.name" ; then exit $?; fi
 mvn -ntp liberty:stop
 
 # Delete m2 cache after completion
