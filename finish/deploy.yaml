@@ -11,6 +11,7 @@ spec:
   # tag::sysImage[]
   applicationImage: guide/system-imagestream:1.0-SNAPSHOT
   # end::sysImage[]
+  pullPolicy: Always
   service:
     # tag::servicePort[]
     port: 9443
