@@ -1,4 +1,4 @@
-// Copyright (c) 2022 IBM Corporation and others.
+// Copyright (c) 2022, 2023 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -323,6 +323,7 @@ endif::[]
 ifdef::cloud-hosted[]
 Run the following commands to update the **applicationImage** with the **pullSecret** and deploy the **system** microservice with the previously explained configuration:
 ```bash
+sed -i 's=v1=v1beta2=g' deploy.yaml
 sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 ```
@@ -458,6 +459,7 @@ endif::[]
 ifdef::cloud-hosted[]
 Run the following commands to update the **applicationImage** with the **pullSecret** and deploy the **system** microservice with the new configuration:
 ```bash
+sed -i 's=v1=v1beta2=g' deploy.yaml
 sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 ```
