@@ -7,7 +7,7 @@
 
 
     <groupId>io.openliberty.guides</groupId>
-    <artifactId>draft-guide-openliberty-operator-openshift-system</artifactId>
+    <artifactId>guide-openliberty-operator-openshift-system</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
