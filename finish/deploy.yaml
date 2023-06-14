@@ -1,5 +1,5 @@
 # tag::system[]
-apiVersion: apps.openliberty.io/v1beta2
+apiVersion: apps.openliberty.io/v1
 # tag::olapp[]
 kind: OpenLibertyApplication
 # end::olapp[]
@@ -11,9 +11,10 @@ spec:
   # tag::sysImage[]
   applicationImage: guide/system-imagestream:1.0-SNAPSHOT
   # end::sysImage[]
+  pullPolicy: Always
   service:
     # tag::servicePort[]
-    port: 9080
+    port: 9443
     # end::servicePort[]
   # end::service[]
   # tag::expose[]
@@ -33,8 +34,8 @@ spec:
       failureThreshold: 12
       httpGet:
         path: /health/started
-        port: 9080
-        scheme: HTTP
+        port: 9443
+        scheme: HTTPS
       initialDelaySeconds: 30
       periodSeconds: 2
       timeoutSeconds: 10
@@ -44,8 +45,8 @@ spec:
       failureThreshold: 12
       httpGet:
         path: /health/live
-        port: 9080
-        scheme: HTTP
+        port: 9443
+        scheme: HTTPS
       initialDelaySeconds: 30
       periodSeconds: 2
       timeoutSeconds: 10
@@ -55,8 +56,8 @@ spec:
       failureThreshold: 12
       httpGet:
         path: /health/ready
-        port: 9080
-        scheme: HTTP
+        port: 9443
+        scheme: HTTPS
       initialDelaySeconds: 30
       periodSeconds: 2
       timeoutSeconds: 10

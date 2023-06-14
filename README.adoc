@@ -1,4 +1,4 @@
-// Copyright (c) 2022 IBM Corporation and others.
+// Copyright (c) 2022, 2023 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 //   https://creativecommons.org/licenses/by-nd/4.0/
@@ -130,10 +130,10 @@ Look for the following output, which shows the https://kubernetes.io/docs/concep
 
 [role='no_copy']
 ```
-NAME                     SHORTNAMES        APIGROUP                     NAMESPACED  KIND
-openlibertyapplications  olapp,olapps      apps.openliberty.io/v1beta2  true        OpenLibertyApplication
-openlibertydumps         oldump,oldumps    apps.openliberty.io/v1beta2  true        OpenLibertyDump
-openlibertytraces        oltrace,oltraces  apps.openliberty.io/v1beta2  true        OpenLibertyTrace
+NAME                     SHORTNAMES        APIGROUP                NAMESPACED  KIND
+openlibertyapplications  olapp,olapps      apps.openliberty.io/v1  true        OpenLibertyApplication
+openlibertydumps         oldump,oldumps    apps.openliberty.io/v1  true        OpenLibertyDump
+openlibertytraces        oltrace,oltraces  apps.openliberty.io/v1  true        OpenLibertyTrace
 ```
 
 Each CRD defines a kind of object that can be used, which is specified in the previous example by the `KIND` value. The `SHORTNAME` value specifies alternative names that you can substitute in the configuration to refer to an object kind. For example, you can refer to the `OpenLibertyApplication` object kind by one of its specified shortnames, such as `olapps`. 
@@ -323,7 +323,9 @@ endif::[]
 ifdef::cloud-hosted[]
 Run the following commands to update the **applicationImage** with the **pullSecret** and deploy the **system** microservice with the previously explained configuration:
 ```bash
-sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
+sed -i 's=v1=v1beta2=g' deploy.yaml
+sed -i 's=9443=9080=g' deploy.yaml
+sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 ```
 endif::[]
@@ -361,7 +363,7 @@ Namespace:    guide
 Labels:       app.kubernetes.io/part-of=system
               name=system
 Annotations:  <none>
-API Version:  apps.openliberty.io/v1beta2
+API Version:  apps.openliberty.io/v1
 Kind:         OpenLibertyApplication
 
 ...
@@ -381,14 +383,14 @@ Look for an output that is similar to the following example:
 [role='no_copy']
 ```
 NAME     HOST/PORT                                                     PATH   SERVICES   PORT       TERMINATION   WILDCARD
-system   system-guide.2886795274-80-kota02.environments.katacoda.com          system     9080-tcp                 None
+system   system-guide.2886795274-80-kota02.environments.katacoda.com          system     9443-tcp                 None
 ```
 
 
 Visit the microservice by going to the following URL: 
-`http://[HOST]/system/properties`
+`https://[HOST]/system/properties`
 
-Make sure to substitute the appropriate `[HOST]` value. For example, using the output from the command above, `system-guide.2886795274-80-kota02.environments.katacoda.com` is the `HOST`. The following example shows this value substituted for `HOST` in the URL: `\http://system-guide.2886795274-80-kota02.environments.katacoda.com/system/properties`.
+Make sure to substitute the appropriate `[HOST]` value. For example, using the output from the command above, `system-guide.2886795274-80-kota02.environments.katacoda.com` is the `HOST`. The following example shows this value substituted for `HOST` in the URL: `\https://system-guide.2886795274-80-kota02.environments.katacoda.com/system/properties`.
 
 // Cloud-hosted guide instruction
 ifdef::cloud-hosted[]
@@ -408,7 +410,7 @@ oc delete -f deploy.yaml
 
 == Specifying optional parameters
 
-You can also use the Open Liberty Operator to implement optional parameters in your application deployment by specifying the associated CRDs in your `deploy.yaml` file. For example, you can configure the https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/[Kubernetes liveness, readiness and startup probes^]. Visit the https://github.com/OpenLiberty/open-liberty-operator/blob/main/doc/user-guide-v1beta2.adoc#configuration[Open Liberty Operator user guide^] to find all of the supported optional CRDs.
+You can also use the Open Liberty Operator to implement optional parameters in your application deployment by specifying the associated CRDs in your `deploy.yaml` file. For example, you can configure the https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/[Kubernetes liveness, readiness and startup probes^]. Visit the https://github.com/OpenLiberty/open-liberty-operator/blob/main/doc/user-guide-v1.adoc#configuration[Open Liberty Operator user guide^] to find all of the supported optional CRDs.
 
 To configure the Kubernetes liveness, readiness and startup probes by using the Open Liberty Operator, specify the `probes` in your `deploy.yaml` file. The [hotspot=startupProbe file=0]`startup` probe verifies whether deployed application is fully initialized before the liveness probe takes over. Then, the [hotspot=livenessProbe file=0]`liveness` probe determines whether the application is running and the [hotspot=readinessProbe file=0]`readiness` probe determines whether the application is ready to process requests. For more information about application health checks, see the https://openliberty.io/guides/kubernetes-microprofile-health.html[Checking the health of microservices on Kubernetes^] guide.
 
@@ -446,19 +448,22 @@ Look for the following output to confirm that the health checks are successfully
 
 [role='no_copy']
 ```
-Liveness:   http-get http://:9080/health/live delay=30s timeout=10s period=2s #success=1 #failure=12
-Readiness:  http-get http://:9080/health/ready delay=30s timeout=10s period=2s #success=1 #failure=12
-Startup:    http-get http://:9080/health/started delay=30s timeout=10s period=2s #success=1 #failure=12
+Liveness:   http-get https://:9443/health/live delay=30s timeout=10s period=2s #success=1 #failure=12
+Readiness:  http-get https://:9443/health/ready delay=30s timeout=10s period=2s #success=1 #failure=12
+Startup:    http-get https://:9443/health/started delay=30s timeout=10s period=2s #success=1 #failure=12
 ```
 
-You can revisit the microservice at `http://[HOST]/system/properties` as the previous section.
+You can revisit the microservice at `https://[HOST]/system/properties` as the previous section.
 endif::[]
 
 // Cloud-hosted guide instruction
 ifdef::cloud-hosted[]
 Run the following commands to update the **applicationImage** with the **pullSecret** and deploy the **system** microservice with the new configuration:
 ```bash
-sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
+sed -i 's=v1=v1beta2=g' deploy.yaml
+sed -i 's=9443=9080=g' deploy.yaml
+sed -i 's=HTTPS=HTTP=g' deploy.yaml
+sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 ```
 Run the following command to check status of the pods:
