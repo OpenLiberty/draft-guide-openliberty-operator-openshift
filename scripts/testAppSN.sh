@@ -57,7 +57,7 @@ do
     time_out=$((time_out + 1))
     sleep 5
 
-    if [ "$time_out" = "24" ]; 
+    if [ "$time_out" = "36" ]; 
     then
         echo Unable to reach /health endpoint
         echo Try rerunning the this test script
