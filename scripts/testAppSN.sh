@@ -41,6 +41,7 @@ oc describe imagestream/system-imagestream
 
 sed -i 's=v1=v1beta2=g' deploy.yaml
 sed -i 's=9443=9080=g' deploy.yaml
+sed -i 's=HTTPS=HTTP=g' deploy.yaml
 sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 
