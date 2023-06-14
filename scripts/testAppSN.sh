@@ -12,7 +12,9 @@ cd /home/project/guide-openliberty-operator-openshift/finish
 mvn clean package
 oc process -f build.yaml | oc create -f - || exit 1
 oc start-build system-buildconfig --from-dir=system/. || exit 1
+sleep 240
 
+time_out=0
 while :
 do
     if [ "$(oc logs build/system-buildconfig-1 | grep "Push successful")" = "Push successful" ];
@@ -21,7 +23,16 @@ do
         break
     fi
 
+    time_out=$((time_out + 1))
     sleep 15
+
+    if [ "$time_out" = "8" ]; 
+    then
+        echo Unable to build
+        oc logs build/system-buildconfig-1
+        delete_oc
+        exit 1
+    fi
 done
 
 sed -i 's=v1=v1beta2=g' deploy.yaml
