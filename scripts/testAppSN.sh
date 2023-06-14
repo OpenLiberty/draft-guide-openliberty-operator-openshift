@@ -26,14 +26,18 @@ do
     time_out=$((time_out + 1))
     sleep 15
 
-    if [ "$time_out" = "8" ]; 
+    if [ "$time_out" = "12" ]; 
     then
         echo Unable to build
         oc logs build/system-buildconfig-1
-        delete_oc
+        oc delete imagestream.image.openshift.io/system-imagestream
+        oc delete bc system-buildconfig
         exit 1
     fi
 done
+
+oc get imagestreams
+oc describe imagestream/system-imagestream
 
 sed -i 's=v1=v1beta2=g' deploy.yaml
 sed -i 's=9443=9080=g' deploy.yaml
