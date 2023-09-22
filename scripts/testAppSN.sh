@@ -69,7 +69,7 @@ do
     fi
 done
 
-curl -Is http://"$(oc get routes system -o jsonpath='{.spec.host}')/system/properties" | grep "200 OK" || echo Failure deploying container | exit 1
+curl -kIs https://"$(oc get routes system -o jsonpath='{.spec.host}')/system/properties" | grep "200 OK" || echo Failure deploying container | exit 1
 
 delete_oc
 
