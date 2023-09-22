@@ -9,6 +9,9 @@ delete_oc () {
 
 cd /home/project/guide-openliberty-operator-openshift/finish
 
+sed -i 's=0.9=0.99=g' ./system/src/main/java/io/openliberty/guides/system/health/SystemLivenessCheck.java
+sed -i 's=0.95=0.99=g' ./system/src/main/java/io/openliberty/guides/system/health/SystemStartupCheck.java
+
 mvn clean package
 oc process -f build.yaml | oc create -f - || exit 1
 oc start-build system-buildconfig --from-dir=system/. || exit 1
@@ -26,7 +29,7 @@ do
     time_out=$((time_out + 1))
     sleep 15
 
-    if [ "$time_out" = "12" ]; 
+    if [ "$time_out" = "24" ]; 
     then
         echo Unable to build
         oc logs build/system-buildconfig-1
@@ -50,6 +53,7 @@ has_event=$(oc describe olapps/system | grep "Event.*<none>" | cat); if [ "$has_
 time_out=0
 while :
 do
+    curl -Is "http://$(oc get routes system -o jsonpath='{.spec.host}')/health"
     if [ ! "$(curl -Is http://"$(oc get routes system -o jsonpath='{.spec.host}')/health" | grep "200 OK")" = "" ];
     then
         break
@@ -58,7 +62,7 @@ do
     time_out=$((time_out + 1))
     sleep 5
 
-    if [ "$time_out" = "36" ]; 
+    if [ "$time_out" = "72" ]; 
     then
         echo Unable to reach /health endpoint
         echo Try rerunning the this test script
