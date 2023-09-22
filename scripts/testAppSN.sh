@@ -11,7 +11,7 @@ cd /home/project/guide-openliberty-operator-openshift/finish
 
 sed -i 's=0.9=0.99=g' ./system/src/main/java/io/openliberty/guides/system/health/SystemLivenessCheck.java
 sed -i 's=0.95=0.99=g' ./system/src/main/java/io/openliberty/guides/system/health/SystemStartupCheck.java
-sed -i 's=60=6=g'./finish/system/src/main/java/io/openliberty/guides/system/health/SystemReadinessCheck.java
+sed -i 's=60=6=g'./system/src/main/java/io/openliberty/guides/system/health/SystemReadinessCheck.java
 
 mvn clean package
 oc process -f build.yaml | oc create -f - || exit 1
