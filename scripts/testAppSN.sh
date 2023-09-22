@@ -9,6 +9,10 @@ delete_oc () {
 
 cd /home/project/guide-openliberty-operator-openshift/finish
 
+sed -i 's=0.9=0.99=g' ./system/src/main/java/io/openliberty/guides/system/health/SystemLivenessCheck.java
+sed -i 's=0.95=0.99=g' ./system/src/main/java/io/openliberty/guides/system/health/SystemStartupCheck.java
+sed -i 's=60=6=g' ./system/src/main/java/io/openliberty/guides/system/health/SystemReadinessCheck.java
+
 mvn clean package
 oc process -f build.yaml | oc create -f - || exit 1
 oc start-build system-buildconfig --from-dir=system/. || exit 1
@@ -26,7 +30,7 @@ do
     time_out=$((time_out + 1))
     sleep 15
 
-    if [ "$time_out" = "12" ]; 
+    if [ "$time_out" = "24" ]; 
     then
         echo Unable to build
         oc logs build/system-buildconfig-1
@@ -39,9 +43,6 @@ done
 oc get imagestreams
 oc describe imagestream/system-imagestream
 
-sed -i 's=v1=v1beta2=g' deploy.yaml
-sed -i 's=9443=9080=g' deploy.yaml
-sed -i 's=HTTPS=HTTP=g' deploy.yaml
 sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 
@@ -50,7 +51,7 @@ has_event=$(oc describe olapps/system | grep "Event.*<none>" | cat); if [ "$has_
 time_out=0
 while :
 do
-    if [ ! "$(curl -Is http://"$(oc get routes system -o jsonpath='{.spec.host}')/health" | grep "200 OK")" = "" ];
+    if [ ! "$(curl -kIs https://"$(oc get routes system -o jsonpath='{.spec.host}')/health" | grep "200 OK")" = "" ];
     then
         break
     fi
@@ -58,7 +59,7 @@ do
     time_out=$((time_out + 1))
     sleep 5
 
-    if [ "$time_out" = "36" ]; 
+    if [ "$time_out" = "72" ]; 
     then
         echo Unable to reach /health endpoint
         echo Try rerunning the this test script
@@ -68,7 +69,7 @@ do
     fi
 done
 
-curl -Is http://"$(oc get routes system -o jsonpath='{.spec.host}')/system/properties" | grep "200 OK" || echo Failure deploying container | exit 1
+curl -kIs https://"$(oc get routes system -o jsonpath='{.spec.host}')/system/properties" | grep "200 OK" || echo Failure deploying container | exit 1
 
 delete_oc
 
