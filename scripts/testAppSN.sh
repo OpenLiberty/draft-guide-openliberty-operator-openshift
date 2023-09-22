@@ -43,9 +43,6 @@ done
 oc get imagestreams
 oc describe imagestream/system-imagestream
 
-sed -i 's=v1=v1beta2=g' deploy.yaml
-sed -i 's=9443=9080=g' deploy.yaml
-sed -i 's=HTTPS=HTTP=g' deploy.yaml
 sed -i 's=guide/system-imagestream:1.0-SNAPSHOT='"$SN_ICR_NAMESPACE"'/system-imagestream:1.0-SNAPSHOT\n  pullPolicy: Always\n  pullSecret: icr=g' deploy.yaml
 oc apply -f deploy.yaml
 
@@ -54,7 +51,7 @@ has_event=$(oc describe olapps/system | grep "Event.*<none>" | cat); if [ "$has_
 time_out=0
 while :
 do
-    if [ ! "$(curl -Is http://"$(oc get routes system -o jsonpath='{.spec.host}')/health" | grep "200 OK")" = "" ];
+    if [ ! "$(curl -kIs https://"$(oc get routes system -o jsonpath='{.spec.host}')/health" | grep "200 OK")" = "" ];
     then
         break
     fi
