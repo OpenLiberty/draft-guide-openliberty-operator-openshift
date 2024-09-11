@@ -1,3 +1,4 @@
+#!/bin/bash
 oc delete -f deploy.yaml
 oc delete imagestream.image.openshift.io/system-imagestream
 oc delete bc system-buildconfig
