@@ -75,9 +75,9 @@ do
         echo
         echo Try to visit the following URLs manually on your browser:
         echo
-        echo https://$(oc get routes system -o jsonpath='{.spec.host}')/health
+        echo "https://$(oc get routes system -o jsonpath='{.spec.host}')/health"
         echo
-        echo https://$(oc get routes system -o jsonpath='{.spec.host}')/system/properties
+        echo "https://$(oc get routes system -o jsonpath='{.spec.host}')/system/properties"
         echo
         echo Pass if both URLs work.
         echo Then, run ../scripts/tearDownSN.sh
