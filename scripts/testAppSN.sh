@@ -64,6 +64,7 @@ do
     fi
     
     time_out=$((time_out + 1))
+    sleep 15
 
     if [ "$time_out" = "24" ];
     then
